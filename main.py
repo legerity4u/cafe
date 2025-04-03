@@ -1,6 +1,7 @@
 from typing import List, Optional
 import datetime
 from dataclasses import dataclass
+import inventory
 
 @dataclass
 class Topping:
@@ -155,28 +156,27 @@ class Menu():
 class IceCreamParlor:
     def __init__(self):
 
-        self.flavors = [
-            IceCreamFlavor("Шоколадное", 150),
-            IceCreamFlavor("Ванильное", 120),
-            IceCreamFlavor("Крем-брюле", 120),
-            IceCreamFlavor("Клубничное", 110),
-            IceCreamFlavor("Манго", 100),
-            IceCreamFlavor("Малиновое", 90),
-            IceCreamFlavor("Кокосовое", 80),
-            IceCreamFlavor("Банановое", 70),
-            IceCreamFlavor("Вишневое", 60),
-        ]
-        self.topings = [
-            Topping("Карамель", 30),
-            Topping("Шоколадная крошка", 20),
-            Topping("Орехи", 40),
-            Topping("Сникерс", 50)
-        ]
-        self.containers = [
-            Container("Маленький вафельный рожок", 2, 10),
-            Container("Большой вафельный рожок", 3, 15),
-            Container("Бумажный стаканчик", 4),
-        ]
+        self.flavors = []
+        filename = './data/icecream.txt'
+        tuples_list = inventory.read_file(filename)
+        if tuples_list:
+            for tup in tuples_list:
+                self.flavors.append(IceCreamFlavor(tup[0], tup[1]))
+        
+        self.topings = []
+        filename = './data/topping.txt'
+        tuples_list = inventory.read_file(filename)
+        if tuples_list:
+            for tup in tuples_list:
+                self.topings.append(Topping(tup[0], tup[1]))
+        
+        self.containers = []
+        filename = './data/container.txt'
+        tuples_list = inventory.read_file(filename)
+        if tuples_list:
+            for tup in tuples_list:
+                self.containers.append(Container(tup[0], tup[1], tup[2]))
+        
         self.menu = Menu(self.flavors, self.topings, self.containers)
         self.shifts: List[Shift] = []
         self.current_shift: Optional[Shift] = None
